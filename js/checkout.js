@@ -284,7 +284,13 @@ const Checkout = (function() {
                 quantity: Number(item.quantity)
             })),
             shipping: Number(shippingCost),
-            currency: 'USD'
+            currency: 'USD',
+            customer: {
+                name: sanitizedData.name,
+                email: sanitizedData.email,
+                phone: sanitizedData.phone,
+                address: `${sanitizedData.address}, ${sanitizedData.city}, ${sanitizedData.state ? sanitizedData.state + ', ' : ''}${sanitizedData.postalCode}, ${sanitizedData.country}`.replace(/, ,/g, ',').trim()
+            }
         };
 
         console.log("ORDER SENT TO WORKER >>>", JSON.stringify(orderPayload, null, 2));

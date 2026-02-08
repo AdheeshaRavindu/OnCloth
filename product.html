@@ -96,6 +96,7 @@
         let selectedSize = null;
         let selectedColor = null;
         let selectedQuantity = 1;
+        let isColorSelectionRequired = true;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -165,6 +166,12 @@
                     <div class="variant-selector" id="color-selector">
                         <label class="variant-label">Color <span style="color: var(--error-color);">*</span></label>
                         <div class="variant-options" id="color-options"></div>
+                    </div>
+                    <div class="variant-selector" id="color-display" style="display: none;">
+                        <label class="variant-label">Color</label>
+                        <div class="variant-options">
+                            <span id="color-value" class="variant-option selected"></span>
+                        </div>
                     </div>
                     
                     <!-- Quantity Selection -->
@@ -237,21 +244,34 @@
         function renderColorOptions() {
             const container = document.getElementById('color-options');
             const selector = document.getElementById('color-selector');
+            const display = document.getElementById('color-display');
+            const displayValue = document.getElementById('color-value');
             const colors = currentProduct.variants.colors || [];
 
             container.innerHTML = '';
 
             if (colors.length <= 1) {
                 selectedColor = colors[0] || null;
+                isColorSelectionRequired = false;
                 if (selector) {
                     selector.style.display = 'none';
+                }
+                if (display) {
+                    display.style.display = '';
+                }
+                if (displayValue) {
+                    displayValue.textContent = selectedColor ? selectedColor : 'N/A';
                 }
                 updateAddToCartButton();
                 return;
             }
 
+            isColorSelectionRequired = true;
             if (selector) {
                 selector.style.display = '';
+            }
+            if (display) {
+                display.style.display = 'none';
             }
 
             colors.forEach(color => {
@@ -284,17 +304,20 @@
 
         function updateAddToCartButton() {
             const btn = document.getElementById('add-to-cart-btn');
-            if (selectedSize && selectedColor) {
+            const hasColor = selectedColor || !isColorSelectionRequired;
+            if (selectedSize && hasColor) {
                 btn.disabled = false;
                 btn.textContent = 'Add to Cart';
             } else {
                 btn.disabled = true;
-                if (!selectedSize && !selectedColor) {
+                if (!selectedSize && isColorSelectionRequired && !selectedColor) {
                     btn.textContent = 'Select Size and Color';
                 } else if (!selectedSize) {
                     btn.textContent = 'Select Size';
-                } else {
+                } else if (isColorSelectionRequired && !selectedColor) {
                     btn.textContent = 'Select Color';
+                } else {
+                    btn.textContent = 'Select Size and Color';
                 }
             }
         }
@@ -317,8 +340,11 @@
             Utils.hideError('error-message');
             Utils.hideError('success-message');
             
-            if (!selectedSize || !selectedColor) {
-                Utils.showError('error-message', 'Please select both size and color');
+            if (!selectedSize || (isColorSelectionRequired && !selectedColor)) {
+                const message = isColorSelectionRequired
+                    ? 'Please select both size and color'
+                    : 'Please select a size';
+                Utils.showError('error-message', message);
                 return;
             }
             
