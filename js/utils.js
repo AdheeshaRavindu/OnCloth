@@ -236,13 +236,13 @@ const Utils = (function() {
     function updateCartBadge() {
         const badge = document.getElementById('cart-count');
         const cartLink = document.querySelector('.cart-icon');
+        const count = getCartItemCount();
         if (badge) {
-            const count = getCartItemCount();
             badge.textContent = count;
             badge.style.display = count > 0 ? 'inline-block' : 'none';
-            if (cartLink) {
-                cartLink.classList.toggle('has-items', count > 0);
-            }
+        }
+        if (cartLink) {
+            cartLink.classList.toggle('has-items', count > 0);
         }
     }
 
