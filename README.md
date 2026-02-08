@@ -1,6 +1,6 @@
 # onCloth - On-Chain Clothing Store
 
-A framework-agnostic, hosting-agnostic ecommerce frontend for on-chain apparel. Built with pure HTML, CSS, and vanilla JavaScript, designed to be forked, customized, and deployed anywhere.
+A clean, framework-free ecommerce frontend for on-chain clothing. Built with pure HTML, CSS, and vanilla JavaScript
 
 **Live Demo**: https://adheesharavindu.github.io/OnCloth/shop.html
 
