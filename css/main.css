@@ -119,6 +119,15 @@ p {
     gap: var(--spacing-xs);
 }
 
+.cart-icon.has-items {
+    text-shadow: 0 0 6px rgba(255,255,255,0.6), 0 0 12px rgba(255,255,255,0.35);
+    animation: cart-glow 2s ease-in-out infinite;
+}
+
+.cart-icon.has-items .cart-count {
+    box-shadow: 0 0 10px rgba(211,47,47,0.7);
+}
+
 .cart-count {
     background-color: var(--error-color);
     color: #fff;
@@ -127,6 +136,15 @@ p {
     font-size: 0.75rem;
     font-weight: 700;
     display: none;
+}
+
+@keyframes cart-glow {
+    0%, 100% {
+        text-shadow: 0 0 4px rgba(255,255,255,0.45), 0 0 10px rgba(255,255,255,0.25);
+    }
+    50% {
+        text-shadow: 0 0 8px rgba(255,255,255,0.8), 0 0 16px rgba(255,255,255,0.45);
+    }
 }
 
 /* ==================== Hero Section ==================== */

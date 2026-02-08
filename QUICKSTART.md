@@ -1,66 +1,53 @@
 # Quick Start Guide
 
-Get your OnCloth hoodie store live in under 15 minutes.
+Get your onCloth on-chain clothing store live in under 15 minutes.
 
 ## 🚀 Fast Track (Minimum Steps)
 
-### 1. Configure Coinbase Commerce (5 minutes)
-
-**The Cloudflare Worker is already deployed and configured.**
-
-Worker Endpoint: `https://create-coinbase-checkout.adheesharavindu001.workers.dev`
+### 1. Configure Payment Endpoint (5 minutes)
 
 You only need to:
-1. Create Coinbase Commerce account at https://commerce.coinbase.com
-2. Generate API key in dashboard
-3. Configure worker with your API key (if using your own worker)
-4. Set success URL to: `https://oncloth.shop/success.html`
-5. Set cancel URL to: `https://oncloth.shop/cancel.html`
+1. Choose an on-chain payment provider or checkout service
+2. Configure your backend/endpoint to return a checkout URL
+3. Update the endpoint in `js/checkout.js`
+4. Add the endpoint to `connect-src` in `checkout.html`
+5. Set success and cancel URLs in your provider settings
 
-**No changes needed in checkout.js** - it's already configured to use the worker.
+### 2. Domain & Email
 
-### 2. Domain & Email (Already Configured)
+- Replace placeholder domains and emails in HTML
+- Update support and order contact addresses
 
-- **Domain**: https://oncloth.shop ✅
-- **Support Email**: support@oncloth.shop ✅
-- **Orders Email**: orders@oncloth.shop ✅
+### 3. Deploy (5 minutes)
 
-All HTML files are already updated with correct domain and emails.
-
-### 3. Upload via FTP (5 minutes)
-
-1. Connect to FTP: `ftp.oncloth.shop` (or via Namecheap cPanel)
-2. Navigate to `public_html`
-3. Upload all files from local `public_html` folder
-4. Set permissions: Directories 755, Files 644
+1. Choose any static hosting or server
+2. Upload or deploy the project root contents
+3. Verify HTML, CSS, JS, and images are served
 
 ### 4. Add Product Images (3 minutes)
 
-1. Prepare 24 images (3 per hoodie, 600x600px minimum)
-2. Name according to `/images/README.md`
-3. Upload to `/images/` folder
-4. Verify they load on website
+1. Product images are already in `/images/`
+2. If you want to use them, replace `generateImage(...)` in `js/products.js` with file paths (see `/images/README.md`)
+3. Verify they load on the website
 
-### 5. Enable SSL (Already Done)
+### 5. Enable HTTPS
 
-- SSL is already installed and active
-- HTTPS enforced via .htaccess
-- Site accessible at: https://oncloth.shop
+- Ensure HTTPS is enabled in your deployment environment
 
 ### 6. Test (2 minutes)
 
-- [ ] Visit https://oncloth.shop
+- [ ] Visit your deployed URL
 - [ ] Add item to cart
 - [ ] Go to checkout
 - [ ] Fill out shipping form
-- [ ] Click "Pay with Crypto"
-- [ ] Verify redirect to Coinbase Commerce
+- [ ] Click "Pay with Crypto" (button label)
+- [ ] Verify redirect to your payment provider
 - [ ] Complete small test payment
 - [ ] Verify success page shows order details
 
 ## ✅ You're Live!
 
-Your store is now accepting cryptocurrency payments.
+Your store is now accepting on-chain payments.
 
 ---
 
@@ -69,36 +56,32 @@ Your store is now accepting cryptocurrency payments.
 For comprehensive setup instructions, see:
 - **[README.md](README.md)** - Complete overview
 - **[CONFIGURATION.md](CONFIGURATION.md)** - Full checklist
-- **[FTP-DEPLOYMENT.md](FTP-DEPLOYMENT.md)** - Detailed FTP guide
+- **[Deployment guide](DEPLOYMENT.md)** - Hosting-agnostic deployment steps
 
 ## 🎯 Critical Configuration Points
 
 ### Must Verify Before Launch:
 
-1. **Cloudflare Worker**
-   - Endpoint: `https://create-coinbase-checkout.adheesharavindu001.workers.dev`
-   - Already integrated in checkout.js
+1. **Checkout Endpoint**
+   - Endpoint configured in checkout.js
    - Handles payment creation securely
 
-2. **Coinbase Commerce**
+2. **Payment Provider**
    - Account created and verified
-   - API key configured in worker
+   - API key configured on your backend
    - Email notifications enabled
 
-3. **SSL Certificate**
-   - Already installed and active
-   - HTTPS enforced
-   - Site: https://oncloth.shop
+3. **HTTPS**
+   - Enabled for your domain
 
-4. **Product Images**
-   - All 24 images uploaded
+4. **Product Images (Optional)**
+   - 36 images available (3 per sample item)
    - Correct file names
    - Optimized for web (under 500KB each)
 
 5. **Email Accounts**
-   - support@oncloth.shop configured
-   - orders@oncloth.shop configured
-   - Forwarding set up in hosting panel
+   - support@yourdomain.example configured
+   - orders@yourdomain.example configured
 
 6. **Homepage**
    - shop.html is the main landing page
@@ -123,22 +106,21 @@ Fix: Enable localStorage in browser, disable private mode
 ```
 Problem: Payment button does nothing
 Fix: 1) Check browser console for errors
-     2) Verify Cloudflare Worker is accessible
-     3) Test with small payment amount
-     4) Ensure Coinbase Commerce account is active
+   2) Verify your checkout endpoint is accessible
+   3) Test with small payment amount
+   4) Ensure your payment provider account is active
 ```
 
 ### SSL Not Working
 ```
 Problem: Not secure warning  
-Fix: SSL is already configured. Clear browser cache.
+Fix: Ensure HTTPS is enabled and clear browser cache.
 ```
 
 ### Optional but Recommended:
 
 5. **Domain Configuration**
-   - Update all hardcoded URLs
-   - Set up email forwarding
+   - Update placeholder URLs
    - Configure DNS properly
 
 6. **Legal Pages**
@@ -169,27 +151,19 @@ Fix: Check browser console for errors, verify credentials
 ### SSL Not Working
 ```
 Problem: Not secure warning
-Fix: Wait for AutoSSL to complete, check cPanel SSL status
+Fix: Verify your HTTPS configuration and certificate status
 ```
 
-### .htaccess Causes 500 Error
-```
-Problem: Website shows 500 Internal Server Error
-Fix: Remove .htaccess temporarily, add rules one by one
-```
 
 ## 📞 Support Resources
 
-- **Namecheap Support**: https://www.namecheap.com/support/
-- **Coinbase Commerce**: https://commerce.coinbase.com/help
-- **Cloudflare Workers**: https://developers.cloudflare.com/workers/
-- **FileZilla Help**: https://wiki.filezilla-project.org/
-- **OnCloth Support**: support@oncloth.shop
+- **Payment Provider Docs**: See your provider documentation
+- **Deployment Docs**: See your hosting/deployment platform docs
 
 ## 💡 Pro Tips
 
 1. **Test with Small Payment First**
-   - Send $1-5 in crypto
+   - Send a small on-chain payment
    - Verify entire flow works
    - Then promote to customers
 
@@ -199,10 +173,10 @@ Fix: Remove .htaccess temporarily, add rules one by one
    - Use version control (Git)
 
 3. **Monitor First Orders**
-   - Check Coinbase Commerce dashboard
+   - Check your payment provider dashboard
    - Verify order details in localStorage
    - Process orders promptly
-   - Send tracking to orders@oncloth.shop
+   - Send tracking to orders@yourdomain.example
 
 4. **Mobile Testing**
    - Test on actual mobile devices
@@ -212,17 +186,16 @@ Fix: Remove .htaccess temporarily, add rules one by one
 
 5. **Performance**
    - Optimize images before upload (under 500KB)
-   - Images are already optimized with modern formats
-   - Enable browser caching via .htaccess
+   - Enable browser caching via your hosting settings
 
 ## 📊 Order Management
 
-Crypto-only frontend workflow:
+On-chain checkout workflow:
 
-1. **Receive payment notification** from Coinbase Commerce
-2. **Check Coinbase dashboard** for payment details
+1. **Receive payment notification** from your provider
+2. **Check provider dashboard** for payment details
 3. **Customer saved order info** on success page (screenshot)
-4. **Email customer** at orders@oncloth.shop for any clarifications
+4. **Email customer** at orders@yourdomain.example for any clarifications
 5. **Fulfill order** from inventory
 6. **Ship and send tracking** to customer
 7. **Keep records** in spreadsheet or system
@@ -230,8 +203,8 @@ Crypto-only frontend workflow:
 ## 🔄 Regular Maintenance
 
 **Daily:**
-- Check Coinbase Commerce for new orders
-- Respond to customer emails (support@oncloth.shop)
+- Check payment provider for new orders
+- Respond to customer emails (support@yourdomain.example)
 - Monitor website uptime
 
 **Weekly:**
@@ -248,10 +221,10 @@ Crypto-only frontend workflow:
 - Review and update content
 - Update legal pages if needed
 - Review shipping rates
-- Check Cloudflare Worker logs
+- Check your backend logs
 
 ---
 
-**Ready to sell hoodies with crypto? Let's go! 🚀**
+**Ready to launch your on-chain apparel store? Let's go! 🚀**
 
 Last Updated: January 25, 2026

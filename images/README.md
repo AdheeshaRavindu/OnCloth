@@ -1,13 +1,15 @@
-# Product Images
+# Sample Product Images
 
-This folder should contain all product images referenced in the product catalog.
+This folder contains sample product image assets (hoodies) for the default catalog. The UI currently uses generated SVG placeholders from `js/products.js` until you replace those entries with file paths from this folder.
+
+You can replace these images with any apparel imagery. Keep filenames aligned with `js/products.js`, or update the catalog to match your own naming.
 
 ## Image Requirements
 
 - **Format**: JPG or PNG
-- **Minimum Size**: 600x600 pixels
-- **Recommended Size**: 1200x1200 pixels
-- **Aspect Ratio**: Square (1:1)
+- **Minimum Size**: 800x800 pixels
+- **Recommended Size**: 1200x1500 pixels
+- **Aspect Ratio**: 4:5 or 1:1 (CSS uses object-fit cover)
 - **File Size**: Keep under 500KB per image
 - **Background**: Clean, solid color or white background recommended
 
@@ -18,7 +20,7 @@ Images must match the filenames specified in `js/products.js`:
 ### Classic Black Hoodie
 - `classic-black-1.jpg` (main image)
 - `classic-black-2.jpg` (detail shot)
-- `classic-black-3.jpg` (model wearing)
+- `classic-black-3.jpg` (lifestyle shot)
 
 ### Minimalist Grey Hoodie
 - `grey-hoodie-1.jpg`
@@ -55,11 +57,31 @@ Images must match the filenames specified in `js/products.js`:
 - `olive-hoodie-2.jpg`
 - `olive-hoodie-3.jpg`
 
+### Sunset Orange Hoodie
+- `orange-hoodie-1.jpg`
+- `orange-hoodie-2.jpg`
+- `orange-hoodie-3.jpg`
+
+### Midnight Purple Hoodie
+- `purple-hoodie-1.jpg`
+- `purple-hoodie-2.jpg`
+- `purple-hoodie-3.jpg`
+
+### Sky Blue Hoodie
+- `blue-hoodie-1.jpg`
+- `blue-hoodie-2.jpg`
+- `blue-hoodie-3.jpg`
+
+### Crimson Red Hoodie
+- `red-hoodie-1.jpg`
+- `red-hoodie-2.jpg`
+- `red-hoodie-3.jpg`
+
 ## Image Tips
 
 1. **Consistency**: Keep lighting, angle, and styling consistent across all products
 2. **Multiple Angles**: Show front, back, and detail shots
-3. **Model Shots**: Include at least one image with a person wearing the hoodie
+3. **Model Shots**: Optional, but helpful for context
 4. **Details**: Capture fabric texture, stitching, and special features
 5. **Color Accuracy**: Ensure images accurately represent actual product colors
 
