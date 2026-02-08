@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <meta name="description" content="View product details, select size and color, and add to cart.">
+    
+    <title id="page-title">Product Details</title>
+    
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="shop.html" class="logo">OnCloth</a>
+                <nav class="nav">
+                    <a href="shop.html" class="nav-link">Shop</a>
+                    <a href="shipping.html" class="nav-link">Shipping</a>
+                    <a href="cart.html" class="nav-link cart-icon">
+                        Cart
+                        <span id="cart-count" class="cart-count">0</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Error Message -->
+        <div id="error-message" class="message message-error" style="margin-top: 2rem;"></div>
+        
+        <!-- Success Message -->
+        <div id="success-message" class="message message-success" style="margin-top: 2rem;"></div>
+        
+        <!-- Product Detail -->
+        <div id="product-detail" class="product-detail" style="margin-top: 2rem;">
+            <!-- Loaded by JavaScript -->
+        </div>
+        
+        <!-- Product Not Found -->
+        <div id="not-found" style="display: none; text-align: center; padding: 4rem 0;">
+            <h2>Product Not Found</h2>
+            <p style="margin: 1rem 0;">The product you're looking for doesn't exist or is no longer available.</p>
+            <a href="shop.html" class="btn btn-primary">Back to Shop</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Shop</h4>
+                    <ul class="footer-links">
+                        <li><a href="shop.html">All Hoodies</a></li>
+                        <li><a href="size-guide.html">Size Guide</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Customer Service</h4>
+                    <ul class="footer-links">
+                        <li><a href="shipping.html">Shipping Info</a></li>
+                        <li><a href="returns.html">Returns & Exchanges</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: support@oncloth.shop</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 OnCloth. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/security.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/cart.js"></script>
+    <script>
+        let currentProduct = null;
+        let selectedSize = null;
+        let selectedColor = null;
+        let selectedQuantity = 1;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            Utils.updateCartBadge();
+            loadProduct();
+        });
+
+        function loadProduct() {
+            const productId = Utils.getURLParameter('id');
+            
+            if (!productId) {
+                showNotFound();
+                return;
+            }
+            
+            currentProduct = Products.getProductById(productId);
+            
+            if (!currentProduct) {
+                showNotFound();
+                return;
+            }
+            
+            renderProduct();
+        }
+
+        function showNotFound() {
+            document.getElementById('product-detail').style.display = 'none';
+            document.getElementById('not-found').style.display = 'block';
+        }
+
+        function renderProduct() {
+            selectedSize = null;
+            selectedColor = null;
+            selectedQuantity = 1;
+            document.getElementById('page-title').textContent = currentProduct.name + ' - Hoodie Store';
+            
+            const container = document.getElementById('product-detail');
+            container.innerHTML = `
+                <div class="product-gallery">
+                    <img id="main-image" 
+                         src="${Security.sanitizeHTML(currentProduct.images[0])}" 
+                         alt="${Security.sanitizeHTML(currentProduct.name)}" 
+                         class="main-image"
+                         onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\\'http://www.w3.org/2000/svg\\' width=\\'600\\' height=\\'600\\'%3E%3Crect fill=\\'%23f5f5f5\\' width=\\'600\\' height=\\'600\\'/%3E%3Ctext fill=\\'%23999\\' font-family=\\'sans-serif\\' font-size=\\'24\\' x=\\'50%25\\' y=\\'50%25\\' text-anchor=\\'middle\\'%3EImage Not Available%3C/text%3E%3C/svg%3E'">
+                    <div class="thumbnail-images" id="thumbnails"></div>
+                </div>
+                
+                <div class="product-details">
+                    <h1>${Security.sanitizeHTML(currentProduct.name)}</h1>
+                    <p class="product-price" style="font-size: 2rem; margin-bottom: 1rem;">${Utils.formatPrice(currentProduct.price)}</p>
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">${Security.sanitizeHTML(currentProduct.description)}</p>
+                    
+                    <div style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; margin-bottom: 1.5rem;">
+                        <p><strong>Fabric:</strong> ${Security.sanitizeHTML(currentProduct.fabric)}</p>
+                        <p><strong>Fit:</strong> ${Security.sanitizeHTML(currentProduct.fit)}</p>
+                        <p><strong>Care:</strong> ${Security.sanitizeHTML(currentProduct.care)}</p>
+                    </div>
+                    
+                    <!-- Size Selection -->
+                    <div class="variant-selector">
+                        <label class="variant-label">Size <span style="color: var(--error-color);">*</span></label>
+                        <div class="variant-options" id="size-options"></div>
+                        <a href="size-guide.html" style="color: var(--text-secondary); font-size: 0.9rem;">View Size Guide</a>
+                    </div>
+                    
+                    <!-- Color Selection -->
+                    <div class="variant-selector" id="color-selector">
+                        <label class="variant-label">Color <span style="color: var(--error-color);">*</span></label>
+                        <div class="variant-options" id="color-options"></div>
+                    </div>
+                    
+                    <!-- Quantity Selection -->
+                    <div class="variant-selector">
+                        <label class="variant-label">Quantity</label>
+                        <div class="quantity-selector">
+                            <button type="button" class="quantity-btn" onclick="decreaseQuantity()">-</button>
+                            <input type="number" id="quantity" class="quantity-input" value="1" min="1" max="5" readonly>
+                            <button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Add to Cart Button -->
+                    <button id="add-to-cart-btn" class="btn btn-primary btn-full" onclick="addToCart()" disabled>
+                        Select Size and Color
+                    </button>
+                    
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 1rem;">
+                        <strong>Delivery:</strong> Ships within 3-5 business days<br>
+                        <strong>Returns:</strong> 30-day return policy
+                    </p>
+                </div>
+            `;
+            
+            document.getElementById('quantity').value = selectedQuantity;
+
+            // Render thumbnails
+            renderThumbnails();
+            
+            // Render size options
+            renderSizeOptions();
+            
+            // Render color options
+            renderColorOptions();
+        }
+
+        function renderThumbnails() {
+            const container = document.getElementById('thumbnails');
+            currentProduct.images.forEach((image, index) => {
+                const img = document.createElement('img');
+                img.src = image;
+                img.alt = currentProduct.name;
+                img.className = 'thumbnail' + (index === 0 ? ' active' : '');
+                img.onclick = () => changeMainImage(image, img);
+                img.onerror = function() {
+                    this.src = 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'80\' height=\'80\'%3E%3Crect fill=\'%23f5f5f5\' width=\'80\' height=\'80\'/%3E%3C/svg%3E';
+                };
+                container.appendChild(img);
+            });
+        }
+
+        function changeMainImage(src, thumbnail) {
+            document.getElementById('main-image').src = src;
+            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+            thumbnail.classList.add('active');
+        }
+
+        function renderSizeOptions() {
+            const container = document.getElementById('size-options');
+            currentProduct.variants.sizes.forEach(size => {
+                const option = document.createElement('button');
+                option.type = 'button';
+                option.className = 'variant-option';
+                option.textContent = size;
+                option.onclick = () => selectSize(size, option);
+                container.appendChild(option);
+            });
+        }
+
+        function renderColorOptions() {
+            const container = document.getElementById('color-options');
+            const selector = document.getElementById('color-selector');
+            const colors = currentProduct.variants.colors || [];
+
+            container.innerHTML = '';
+
+            if (colors.length <= 1) {
+                selectedColor = colors[0] || null;
+                if (selector) {
+                    selector.style.display = 'none';
+                }
+                updateAddToCartButton();
+                return;
+            }
+
+            if (selector) {
+                selector.style.display = '';
+            }
+
+            colors.forEach(color => {
+                const option = document.createElement('button');
+                option.type = 'button';
+                option.className = 'variant-option';
+                option.textContent = color;
+                option.onclick = () => selectColor(color, option);
+                container.appendChild(option);
+            });
+        }
+
+        function selectSize(size, element) {
+            selectedSize = size;
+            document.querySelectorAll('#size-options .variant-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            updateAddToCartButton();
+        }
+
+        function selectColor(color, element) {
+            selectedColor = color;
+            document.querySelectorAll('#color-options .variant-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            updateAddToCartButton();
+        }
+
+        function updateAddToCartButton() {
+            const btn = document.getElementById('add-to-cart-btn');
+            if (selectedSize && selectedColor) {
+                btn.disabled = false;
+                btn.textContent = 'Add to Cart';
+            } else {
+                btn.disabled = true;
+                if (!selectedSize && !selectedColor) {
+                    btn.textContent = 'Select Size and Color';
+                } else if (!selectedSize) {
+                    btn.textContent = 'Select Size';
+                } else {
+                    btn.textContent = 'Select Color';
+                }
+            }
+        }
+
+        function increaseQuantity() {
+            if (selectedQuantity < 5) {
+                selectedQuantity++;
+                document.getElementById('quantity').value = selectedQuantity;
+            }
+        }
+
+        function decreaseQuantity() {
+            if (selectedQuantity > 1) {
+                selectedQuantity--;
+                document.getElementById('quantity').value = selectedQuantity;
+            }
+        }
+
+        function addToCart() {
+            Utils.hideError('error-message');
+            Utils.hideError('success-message');
+            
+            if (!selectedSize || !selectedColor) {
+                Utils.showError('error-message', 'Please select both size and color');
+                return;
+            }
+            
+            const result = Cart.addItem(currentProduct, selectedSize, selectedColor, selectedQuantity);
+            
+            if (result.success) {
+                Utils.showSuccess('success-message', result.message);
+                Utils.scrollToElement('success-message');
+                
+                // Reset selections after successful add
+                setTimeout(() => {
+                    Utils.hideError('success-message');
+                }, 3000);
+            } else {
+                Utils.showError('error-message', result.message);
+                Utils.scrollToElement('error-message');
+            }
+        }
+    </script>
+</body>
+</html>

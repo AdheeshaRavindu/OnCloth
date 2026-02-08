@@ -1,0 +1,5 @@
+<svg width="800" height="800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="800" fill="#7a4db8"/>
+  <text x="400" y="380" font-family="Arial, sans-serif" font-size="32" fill="#ffffff" text-anchor="middle" font-weight="bold">Midnight Purple Hoodie</text>
+  <text x="400" y="430" font-family="Arial, sans-serif" font-size="24" fill="#e6d4ff" text-anchor="middle">Detail View</text>
+</svg>

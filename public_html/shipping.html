@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <meta name="description" content="Shipping information and delivery details.">
+    
+    <title>Shipping Information - OnCloth</title>
+    
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="shop.html" class="logo">OnCloth</a>
+                <nav class="nav">
+                    <a href="shop.html" class="nav-link">Shop</a>
+                    <a href="shipping.html" class="nav-link">Shipping</a>
+                    <a href="cart.html" class="nav-link cart-icon">
+                        Cart
+                        <span id="cart-count" class="cart-count">0</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container info-page">
+        <div class="info-content">
+            <h1>Shipping Information</h1>
+            
+            <p style="margin-bottom: 2rem;">We ship worldwide with reliable courier services. All orders are carefully packaged and shipped within 3-5 business days.</p>
+            
+            <h2>Shipping Rates</h2>
+            
+            <p>We offer flat-rate shipping to make costs clear and predictable:</p>
+            
+            <table class="size-table" style="margin: 1.5rem 0;">
+                <thead>
+                    <tr>
+                        <th>Region</th>
+                        <th>Shipping Cost</th>
+                        <th>Delivery Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Asia</td>
+                        <td><strong>$10.00 USD</strong></td>
+                        <td>5-10 business days</td>
+                    </tr>
+                    <tr>
+                        <td>Europe, USA, Other Regions</td>
+                        <td><strong>$20.00 USD</strong></td>
+                        <td>7-15 business days</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>Processing Time</h2>
+            
+            <p>All orders are processed within <strong>3-5 business days</strong> after payment confirmation. You will receive an email confirmation once your order is processed and ready to ship.</p>
+            
+            <h2>Tracking Your Order</h2>
+            
+            <p>Once your order ships, we will send you a tracking number via email. You can use this tracking number to follow your package's journey to your doorstep.</p>
+            
+            <ul>
+                <li>Check your email for the tracking notification</li>
+                <li>Click the tracking link or copy the tracking number</li>
+                <li>Visit the courier's website to see real-time updates</li>
+            </ul>
+            
+            <h2>Delivery Address</h2>
+            
+            <p><strong>Important:</strong> Please ensure your shipping address is complete and accurate. We cannot be held responsible for packages delivered to incorrect addresses provided by the customer.</p>
+            
+            <p>If you need to change your shipping address, please contact us immediately at <strong>support@oncloth.shop</strong>. Address changes can only be made before the order ships.</p>
+            
+            <h2>Customs and Duties</h2>
+            
+            <p>For international orders, customs fees, duties, or taxes may apply depending on your country's regulations. These charges are the responsibility of the recipient and are not included in our shipping costs.</p>
+            
+            <h2>Shipping Restrictions</h2>
+            
+            <p>We ship to most countries worldwide. However, some regions may experience delays due to customs processing or local courier availability.</p>
+            
+            <h2>Lost or Damaged Packages</h2>
+            
+            <p>If your package is lost or arrives damaged, please contact us immediately at <strong>support@oncloth.shop</strong> with your order number and tracking information. We will work with you to resolve the issue.</p>
+            
+            <h2>Questions?</h2>
+            
+            <p>If you have any questions about shipping, please don't hesitate to contact us at <strong>support@oncloth.shop</strong>. We're here to help!</p>
+            
+            <p style="margin-top: 2rem;">
+                <a href="shop.html" class="btn btn-primary">Start Shopping</a>
+            </p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Shop</h4>
+                    <ul class="footer-links">
+                        <li><a href="shop.html">All Hoodies</a></li>
+                        <li><a href="size-guide.html">Size Guide</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Customer Service</h4>
+                    <ul class="footer-links">
+                        <li><a href="shipping.html">Shipping Info</a></li>
+                        <li><a href="returns.html">Returns & Exchanges</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: support@oncloth.shop</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 OnCloth. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/security.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Utils.updateCartBadge();
+        });
+    </script>
+</body>
+</html>

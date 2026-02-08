@@ -1,0 +1,5 @@
+<svg width="800" height="800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="800" fill="#3498db"/>
+  <text x="400" y="380" font-family="Arial, sans-serif" font-size="32" fill="#ffffff" text-anchor="middle" font-weight="bold">Sky Blue Hoodie</text>
+  <text x="400" y="430" font-family="Arial, sans-serif" font-size="24" fill="#e8f4fc" text-anchor="middle">Front View</text>
+</svg>

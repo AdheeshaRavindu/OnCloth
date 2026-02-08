@@ -1,0 +1,6 @@
+<svg width="800" height="800" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="800" fill="#fafafa"/>
+  <rect width="800" height="800" fill="none" stroke="#e0e0e0" stroke-width="2"/>
+  <text x="400" y="380" font-family="Arial, sans-serif" font-size="32" fill="#333333" text-anchor="middle" font-weight="bold">White Essential Hoodie</text>
+  <text x="400" y="430" font-family="Arial, sans-serif" font-size="24" fill="#666666" text-anchor="middle">Side View</text>
+</svg>
