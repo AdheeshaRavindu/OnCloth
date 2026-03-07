@@ -3,7 +3,7 @@
  * Helper functions for validation, formatting, and common operations
  */
 
-const Utils = (function() {
+const Utils = (function () {
     'use strict';
 
     /**
@@ -61,28 +61,8 @@ const Utils = (function() {
      * @returns {number} - Shipping cost
      */
     function calculateShipping(country) {
-        if (!country || typeof country !== 'string') {
-            return 20; // Default international
-        }
-
-        const countryLower = country.toLowerCase().trim();
-        
-        // Asia countries - $10
-        const asiaCountries = [
-            'afghanistan', 'bangladesh', 'bhutan', 'brunei', 'cambodia',
-            'china', 'india', 'indonesia', 'japan', 'kazakhstan',
-            'kyrgyzstan', 'laos', 'malaysia', 'maldives', 'mongolia',
-            'myanmar', 'nepal', 'north korea', 'pakistan', 'philippines',
-            'singapore', 'south korea', 'sri lanka', 'taiwan', 'tajikistan',
-            'thailand', 'timor-leste', 'turkmenistan', 'uzbekistan', 'vietnam'
-        ];
-        
-        if (asiaCountries.includes(countryLower)) {
-            return 10;
-        }
-        
-        // All other regions - $20
-        return 20;
+        // Flat $10 shipping rate for all purchases worldwide
+        return 10;
     }
 
     /**

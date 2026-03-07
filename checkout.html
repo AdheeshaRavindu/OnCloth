@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://create-coinbase-checkout.adheesharavindu001.workers.dev;">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https://create-coinbase-checkout.adheesharavindu001.workers.dev;">
     <meta name="description" content="Complete your order with secure cryptocurrency payment.">
-    
+
     <title>Checkout - OnCloth</title>
-    
+
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/main.css">
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
@@ -32,14 +35,14 @@
     <!-- Main Content -->
     <main class="container">
         <h1 style="margin-top: 2rem; margin-bottom: 1rem;">Checkout</h1>
-        
+
         <!-- Messages -->
         <div id="checkout-error" class="message message-error"></div>
         <div id="checkout-loading" class="loading">
             <div class="spinner"></div>
             <p>Processing your order...</p>
         </div>
-        
+
         <!-- Checkout Form -->
         <div class="checkout-wrapper">
             <!-- Shipping Information -->
@@ -50,40 +53,40 @@
                         <label class="form-label required" for="name">Full Name</label>
                         <input type="text" id="name" class="form-input" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label required" for="email">Email Address</label>
                         <input type="email" id="email" class="form-input" required>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label" for="phone">Phone Number</label>
                         <input type="tel" id="phone" class="form-input">
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label required" for="address">Street Address</label>
                         <input type="text" id="address" class="form-input" required>
                     </div>
-                    
+
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="city">City</label>
                             <input type="text" id="city" class="form-input" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="form-label" for="state">State/Province</label>
                             <input type="text" id="state" class="form-input">
                         </div>
                     </div>
-                    
+
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label required" for="postal-code">Postal Code</label>
                             <input type="text" id="postal-code" class="form-input" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label class="form-label required" for="country">Country</label>
                             <select id="country" class="form-select" required>
@@ -91,22 +94,23 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="form-label" for="notes">Order Notes (Optional)</label>
-                        <textarea id="notes" class="form-textarea" placeholder="Any special instructions for your order..."></textarea>
+                        <textarea id="notes" class="form-textarea"
+                            placeholder="Any special instructions for your order..."></textarea>
                     </div>
                 </form>
             </div>
-            
+
             <!-- Order Summary -->
             <div>
                 <h2 style="margin-bottom: 1rem;">Order Summary</h2>
-                
+
                 <div id="order-items" style="margin-bottom: 1rem;">
                     <!-- Items loaded by JavaScript -->
                 </div>
-                
+
                 <div class="cart-summary">
                     <div class="summary-row">
                         <span>Subtotal:</span>
@@ -121,19 +125,20 @@
                         <span id="total">$0.00</span>
                     </div>
                 </div>
-                
+
                 <!-- Payment Methods -->
                 <div style="margin-top: 2rem;">
-                    
+
                     <div class="payment-methods">
                         <button type="button" id="crypto-btn" class="btn payment-btn payment-btn-crypto">
                             <span>💰</span>
                             Pay with Crypto
                         </button>
                     </div>
-                    
+
                     <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 1rem; text-align: center;">
-                        Secure cryptocurrency payment via Coinbase Commerce. Your transaction is encrypted and protected.
+                        Secure cryptocurrency payment via Coinbase Commerce. Your transaction is encrypted and
+                        protected.
                     </p>
                 </div>
             </div>
@@ -186,15 +191,15 @@
         let currentTotals = null;
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             Utils.updateCartBadge();
-            
+
             // Check if cart is empty
             if (Cart.isEmpty()) {
                 window.location.href = 'cart.html';
                 return;
             }
-            
+
             // Validate cart
             const validation = Cart.validateCart();
             if (!validation.valid) {
@@ -204,16 +209,16 @@
                 }, 3000);
                 return;
             }
-            
+
             // Load countries
             loadCountries();
-            
+
             // Load order items
             loadOrderItems();
-            
+
             // Set up country change listener
             document.getElementById('country').addEventListener('change', updateShipping);
-            
+
             // Ensure crypto button is initialized (fallback for production)
             if (typeof Checkout !== 'undefined' && typeof Checkout.initCryptoButton === 'function') {
                 Checkout.initCryptoButton();
@@ -223,7 +228,7 @@
         function loadCountries() {
             const select = document.getElementById('country');
             const countries = Utils.getCountriesList();
-            
+
             countries.forEach(country => {
                 const option = document.createElement('option');
                 option.value = country;
@@ -235,9 +240,9 @@
         function loadOrderItems() {
             const cart = Cart.getCart();
             const container = document.getElementById('order-items');
-            
+
             container.innerHTML = '<div style="border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 1rem;">';
-            
+
             cart.forEach(item => {
                 const itemDiv = document.createElement('div');
                 itemDiv.style.cssText = 'display: flex; justify-content: space-between; margin-bottom: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color);';
@@ -254,28 +259,22 @@
                 `;
                 container.firstChild.appendChild(itemDiv);
             });
-            
+
             // Update initial totals
             updateSummary();
         }
 
         function updateShipping() {
             const country = document.getElementById('country').value;
-            if (!country) {
-                document.getElementById('shipping').textContent = '$0.00';
-                updateSummary();
-                return;
-            }
-            
             currentTotals = Checkout.calculateTotals(country);
             updateSummary();
         }
 
         function updateSummary() {
             const subtotal = Cart.getSubtotal();
-            const shipping = currentTotals ? currentTotals.shipping : 0;
+            const shipping = Utils.calculateShipping();
             const total = subtotal + shipping;
-            
+
             document.getElementById('subtotal').textContent = Utils.formatPrice(subtotal);
             document.getElementById('shipping').textContent = Utils.formatPrice(shipping);
             document.getElementById('total').textContent = Utils.formatPrice(total);
@@ -297,22 +296,22 @@
 
         function proceedWithCrypto() {
             Utils.hideError('checkout-error');
-            
+
             const formData = getFormData();
             const result = Checkout.processCheckout(formData, 'crypto');
-            
+
             if (!result.success) {
                 Utils.showError('checkout-error', result.error);
                 Utils.scrollToElement('checkout-error');
                 return;
             }
-            
+
             // Disable button
             Security.disableButton(document.getElementById('crypto-btn'), 5000);
-            
+
             // Show loading
             Utils.showLoading('checkout-loading', 'Redirecting to payment...');
-            
+
             // Redirect to Coinbase Commerce
             setTimeout(() => {
                 window.location.href = result.redirectUrl;
@@ -320,4 +319,5 @@
         }
     </script>
 </body>
+
 </html>

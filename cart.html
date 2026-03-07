@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
     <meta name="description" content="Review your shopping cart and proceed to checkout.">
-    
+
     <title>Shopping Cart - OnCloth</title>
-    
+
     <link rel="stylesheet" href="css/reset.css">
     <link rel="stylesheet" href="css/main.css">
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
@@ -32,23 +35,23 @@
     <!-- Main Content -->
     <main class="container">
         <h1 style="margin-top: 2rem; margin-bottom: 1rem;">Shopping Cart</h1>
-        
+
         <!-- Messages -->
         <div id="error-message" class="message message-error"></div>
         <div id="success-message" class="message message-success"></div>
-        
+
         <!-- Cart Items -->
         <div id="cart-items" class="cart-items">
             <!-- Loaded by JavaScript -->
         </div>
-        
+
         <!-- Empty Cart Message -->
         <div id="empty-cart" class="cart-empty" style="display: none;">
             <h2>Your cart is empty</h2>
             <p style="margin: 1rem 0; color: var(--text-secondary);">Add some hoodies to get started!</p>
             <a href="shop.html" class="btn btn-primary">Continue Shopping</a>
         </div>
-        
+
         <!-- Cart Summary -->
         <div id="cart-summary" class="cart-summary" style="display: none;">
             <div class="summary-row">
@@ -57,7 +60,7 @@
             </div>
             <div class="summary-row">
                 <span>Shipping:</span>
-                <span>Calculated at checkout</span>
+                <span id="shipping-cost">$10.00</span>
             </div>
             <div class="summary-row">
                 <span>Total:</span>
@@ -111,7 +114,7 @@
     <script src="js/cart.js"></script>
     <script>
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             Utils.updateCartBadge();
             renderCart();
         });
@@ -121,20 +124,20 @@
             const container = document.getElementById('cart-items');
             const emptyMessage = document.getElementById('empty-cart');
             const summarySection = document.getElementById('cart-summary');
-            
+
             if (cart.length === 0) {
                 container.style.display = 'none';
                 summarySection.style.display = 'none';
                 emptyMessage.style.display = 'block';
                 return;
             }
-            
+
             emptyMessage.style.display = 'none';
             container.style.display = 'block';
             summarySection.style.display = 'block';
-            
+
             container.innerHTML = '';
-            
+
             cart.forEach((item, index) => {
                 const itemElement = document.createElement('div');
                 itemElement.className = 'cart-item';
@@ -168,25 +171,27 @@
                 `;
                 container.appendChild(itemElement);
             });
-            
+
             // Update summary
             updateSummary();
         }
 
         function updateSummary() {
             const subtotal = Cart.getSubtotal();
+            const shipping = Utils.calculateShipping();
             document.getElementById('subtotal').textContent = Utils.formatPrice(subtotal);
-            document.getElementById('total').textContent = Utils.formatPrice(subtotal);
+            document.getElementById('shipping-cost').textContent = Utils.formatPrice(shipping);
+            document.getElementById('total').textContent = Utils.formatPrice(subtotal + shipping);
         }
 
         function updateQuantity(index, newQuantity) {
             Utils.hideError('error-message');
             Utils.hideError('success-message');
-            
+
             if (newQuantity < 1 || newQuantity > 5) {
                 return;
             }
-            
+
             if (Cart.updateQuantity(index, newQuantity)) {
                 renderCart();
                 Utils.showSuccess('success-message', 'Quantity updated');
@@ -199,7 +204,7 @@
         function removeItem(index) {
             Utils.hideError('error-message');
             Utils.hideError('success-message');
-            
+
             if (confirm('Remove this item from cart?')) {
                 if (Cart.removeItem(index)) {
                     renderCart();
@@ -212,4 +217,5 @@
         }
     </script>
 </body>
+
 </html>
