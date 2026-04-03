@@ -7,6 +7,9 @@ const Checkout = (function() {
     'use strict';
 
     const ORDER_KEY = 'currentOrder';
+    const CHECKOUT_ENDPOINT = 'https://create-coinbase-checkout.adheesharavindu001.workers.dev';
+    const CHECKOUT_TIMEOUT_MS = 15000;
+    let isPaymentInProgress = false;
 
     /**
      * Validate checkout form
@@ -218,10 +221,54 @@ const Checkout = (function() {
     }
 
     /**
+     * Extract checkout URL from worker response (supports common naming variants)
+     * @param {Object} data - Worker response JSON
+     * @returns {string} - Checkout URL or empty string
+     */
+    function extractCheckoutUrl(data) {
+        if (!data || typeof data !== 'object') {
+            return '';
+        }
+
+        return data.checkoutUrl || data.checkout_url || data.url ||
+            (data.data && (data.data.checkoutUrl || data.data.checkout_url || data.data.url)) || '';
+    }
+
+    /**
+     * Convert thrown fetch errors into clear user-facing messages
+     * @param {Error} error - Error from payment flow
+     * @returns {string} - User-facing message
+     */
+    function getPaymentErrorMessage(error) {
+        if (error && error.name === 'AbortError') {
+            return 'Payment server timed out. Please try again in a few seconds.';
+        }
+
+        if (error && /failed to fetch|networkerror/i.test(error.message || '')) {
+            return 'Unable to reach payment server. Check your internet connection and endpoint/CORS settings.';
+        }
+
+        return (error && error.message) ? error.message : 'Unable to process crypto payment. Please try again.';
+    }
+
+    /**
      * Pay with Crypto via Cloudflare Worker
      * Handles crypto payment flow: validates cart, sends order to worker, saves order, redirects to checkout
      */
     async function payWithCrypto() {
+        if (isPaymentInProgress) {
+            return;
+        }
+
+        isPaymentInProgress = true;
+        const cryptoBtn = document.getElementById('crypto-btn');
+        if (cryptoBtn) {
+            cryptoBtn.disabled = true;
+        }
+
+        Utils.hideError('checkout-error');
+        Utils.showLoading('checkout-loading', 'Processing your order...');
+
         // Get cart data
         const cart = Cart.getCart();
         
@@ -296,26 +343,44 @@ const Checkout = (function() {
         console.log("ORDER SENT TO WORKER >>>", JSON.stringify(orderPayload, null, 2));
 
         try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), CHECKOUT_TIMEOUT_MS);
+
             // Send POST request to Cloudflare Worker
-            const response = await fetch('https://create-coinbase-checkout.adheesharavindu001.workers.dev', {
+            const response = await fetch(CHECKOUT_ENDPOINT, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(orderPayload)
+                body: JSON.stringify(orderPayload),
+                signal: controller.signal
             });
+
+            clearTimeout(timeoutId);
 
             // Check if request was successful
             if (!response.ok) {
-                throw new Error(`Server responded with status: ${response.status}`);
+                let serverError = `Payment server error (${response.status}).`;
+                try {
+                    const errorData = await response.json();
+                    const errorMessage = errorData.error || errorData.message || errorData.details;
+                    if (errorMessage) {
+                        serverError = `${serverError} ${String(errorMessage)}`;
+                    }
+                } catch (_) {
+                    // Ignore non-JSON error bodies and keep status-based message.
+                }
+
+                throw new Error(serverError);
             }
 
             // Parse response
             const data = await response.json();
+            const checkoutUrl = extractCheckoutUrl(data);
 
             // Verify checkoutUrl exists in response
-            if (!data.checkoutUrl) {
-                throw new Error('No checkout URL received from server');
+            if (!checkoutUrl) {
+                throw new Error('No checkout URL received from payment server.');
             }
 
             // Prepare lastOrder object with full cart details for post-payment confirmation
@@ -344,16 +409,21 @@ const Checkout = (function() {
             }
 
             // Redirect to Coinbase Commerce checkout
-            window.location.href = data.checkoutUrl;
+            window.location.href = checkoutUrl;
 
         } catch (error) {
             // Handle any errors during the payment process
             console.error('Crypto payment error:', error);
             
             // Show user-friendly error message
-            Utils.showError('checkout-error', 
-                'Unable to process crypto payment. Please check your connection and try again.'
-            );
+            Utils.showError('checkout-error', getPaymentErrorMessage(error));
+            Utils.scrollToElement('checkout-error');
+        } finally {
+            isPaymentInProgress = false;
+            Utils.hideLoading('checkout-loading');
+            if (cryptoBtn) {
+                cryptoBtn.disabled = false;
+            }
         }
     }
 
@@ -368,9 +438,14 @@ const Checkout = (function() {
             return;
         }
 
+        if (cryptoBtn.dataset.checkoutBound === 'true') {
+            return;
+        }
+
         console.log('Crypto button found, attaching click handler');
         // Attach payWithCrypto function to button click
         cryptoBtn.addEventListener('click', payWithCrypto);
+        cryptoBtn.dataset.checkoutBound = 'true';
     }
 
     // Auto-initialize on DOM ready
