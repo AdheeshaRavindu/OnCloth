@@ -360,6 +360,7 @@ const Checkout = (function() {
 
             // Check if request was successful
             if (!response.ok) {
+                const cfRay = response.headers.get('CF-RAY') || response.headers.get('cf-ray');
                 let serverError = `Payment server error (${response.status}).`;
                 try {
                     const errorData = await response.json();
@@ -369,6 +370,10 @@ const Checkout = (function() {
                     }
                 } catch (_) {
                     // Ignore non-JSON error bodies and keep status-based message.
+                }
+
+                if (cfRay) {
+                    serverError = `${serverError} Ref: ${cfRay}`;
                 }
 
                 throw new Error(serverError);
